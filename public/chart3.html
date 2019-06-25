@@ -1,0 +1,170 @@
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/highcharts/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<script type="text/javascript">
+
+var _startSerie=[];
+var _startCategories=[];
+var chart;
+
+
+function loadData(){
+
+var jobtitlevalue;
+	console.log("load data")
+
+        	jobtitle=window.localStorage.getItem('jobtitle');
+			city= window.localStorage.getItem('city');
+			career_level= window.localStorage.getItem('career_level');
+
+		$.ajax({		
+// insert the URL of the page that returns the data			 
+url: location.protocol + '//' + location.host + '/salary_recommendation/'+city+'/'+jobtitle+'/'+career_level,
+
+
+// enter any parameters
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		//alert(data);
+		setData(data,jobtitlevalue);
+	}).fail(function(jqXHR, textStatus, errorThrown){});
+
+
+
+} // end loadData()
+
+$
+
+// ------------------------------------
+function setData(data,jobtitlevalue){
+	console.log('ajax data')
+
+	console.log(data)
+
+	console.log('ajax data minimum')
+
+	console.log(data[0].minimum_salary);
+// enter the names of the table columns with the data
+	var description = "career_level";
+	var careerLevel = "career_level";
+	var value = "salary";
+	var minimum_array=[];
+	var maximum_array=[];
+	var average_array=[];		
+	var _val;	
+	var impianti=[];
+	var categories=[];
+	var impiantiObj=[];
+		
+// cycle all the data received and I take the different plants + all the different dates
+	for (_val in data){
+			
+		if(minimum_array.indexOf(data[_val].minimum_salary==-1)){ 
+			minimum_array.push(data[_val].minimum_salary); 
+		}
+		if(maximum_array.indexOf(data[_val].maximum_salary==-1)){ 
+			maximum_array.push(data[_val].maximum_salary); 
+		}	
+		if(average_array.indexOf(data[_val].average_salary==-1)){ 
+		   average_array.push(data[_val].average_salary); 
+		}
+		if(categories.indexOf(data[_val][careerLevel])==-1) {
+			categories.push(data[_val][careerLevel]);
+		}	
+	}
+			
+	function formatLabel() {
+		var _arr = [];
+		for(var i=0; i<categories.length; i++) { 
+			_arr.push(categories[i]);
+		}
+			
+		return _arr;
+	}
+		
+		
+	_startCategories=formatLabel();
+		
+	console.log(_startCategories)
+		
+	if(chart==undefined){
+		
+			_startSerie.push( {name:'Minimum Salary', data:minimum_array} );
+			_startSerie.push( {name:'Maximum Salary', data:maximum_array} );
+			_startSerie.push( {name:'Average Salary', data:average_array} );
+
+			console.log('series data');
+			console.log(_startSerie);
+		setupChart(jobtitlevalue);
+		
+	} else {
+// in subsequent calls, I update the chart
+		chart = $('#container').highcharts();
+		chart.xAxis[0].setCategories(_startCategories);
+			chart.series[0].setData(minimum_array);
+			chart.series[1].setData(maximum_array);
+			chart.series[2].setData(average_array);		
+	}	
+}
+
+
+
+function setupChart(jobtitlevalue){	
+	
+    chart = $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Salaries for '+jobtitle+" "+career_level+" in "+city
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: _startCategories,
+            crosshair: true,
+             title: {
+                text: ''
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Salaries'
+            }
+        },
+        tooltip: {
+            //headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            //pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            //    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+            //footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: _startSerie
+    });
+}
+
+
+$(function(){	
+	// refresh page date in milliseconds
+	setInterval(loadData,5000);
+});
+
+
+// -------------------------------------	
+
+</script>
+

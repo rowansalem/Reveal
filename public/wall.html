@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reveal </title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="lib/animate/animate.min.css" rel="stylesheet">
+  <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+  <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style1.css" rel="stylesheet">
+
+   <!-- Bootstrap core CSS     -->
+   <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+
+   <!-- Animation library for notifications   -->
+   <link href="assets/css/animate.min.css" rel="stylesheet"/>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body id="body">
+
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com">contact@example.com</a>
+        <i class="fa fa-phone"></i>   +2 01111444488
+      </div>
+      <div class="social-links float-right">
+        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container" >
+
+      <div id="logo" class="pull-left">
+        <h1><a href="#body" class="scrollto">Reve<span>al</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="/home.html#body">Home</a></li>
+          <li><a href="/home.html#about">About Us</a></li>
+          <li><a href="/home.html#services">Services</a></li>
+          </li>
+          <li><a href="/home.html#contact">Contact</a></li>
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+  <main id="main">
+
+
+    <!--==========================
+      Services Section
+    ============================-->
+    <section id="posts">
+      <div class="container" id="container">
+
+        
+          </div>
+
+
+      </div>
+
+      </div>
+    </section><!-- #services -->
+
+
+  </main>
+
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript Libraries -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/jquery/jquery-migrate.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/superfish/hoverIntent.js"></script>
+  <script src="lib/superfish/superfish.min.js"></script>
+  <script src="lib/wow/wow.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/magnific-popup/magnific-popup.min.js"></script>
+  <script src="lib/sticky/sticky.js"></script>
+
+  <!-- Contact Form JavaScript File -->
+  <script src="contactform/contactform.js"></script>
+
+  <!-- Template Main Javascript File -->
+  <script src="js/main.js"></script>
+
+<script>
+
+
+
+function load_jobPosts(){
+	
+	console.log("load jobPosts")
+	//alert(username);
+	//alert(location.protocol + '//' + location.host + '/home/'+username);
+	$.ajax({		
+
+// insert the URL of the page that returns the data			 
+		url: location.protocol + '//' + location.host + '/jobPosts',
+		// enter any parameters
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		//alert(location.protocol + '//' + location.host + '/home/'+username);
+		set_jobPosts(data);
+	}).fail(function(jqXHR, textStatus, errorThrown){
+
+		alert("error");
+	});
+}
+
+function set_jobPosts(data){
+	
+ var section = document.getElementById("container");
+  $("#container").empty();
+  var div = document.createElement("div");
+    for(i in data) {
+      console.log("data of "+i);
+      console.log(data[i].Job_name);
+div.innerHTML +=
+                 '<div class="card "> \n '+
+                  '<div class="header">\n' +
+                      '<h4 class="title">'+data[i].Job_name+'</h4> \n' +
+                     ' <p class="category">'+data[i].job_category+'</p>\n' +
+                 ' </div>\n' +
+                  '<div class="content">\n' +
+                     '<p class="description">'+data[i].job_description+'</p>\n' +
+                      '<div class="footer">\n '+
+                          '<div class="legend">\n '+
+                              '<i class="fa fa-map-marker" aria-hidden="true"></i> '+data[i].City+'\n' +  
+                              '<i class="fa fa-suitcase"></i> '+data[i].career_level+'\n' +
+                              '<i class="fa fa-dollar"></i> min:'+data[i].salary_minimum+'\n' +
+                              '<i class="fa fa-dollar"></i> max:'+data[i].salary_maximum+'\n' +
+                              '<i class="fa fa-user-plus"></i>'+data[i].num_vacancies+'\n' +
+                         ' </div>\n '+
+                          '<hr>\n '+
+                          '<div class="stats">\n' +
+                              '<i class="fa fa-check"></i> '+data[i].Job_Date +'\n '+
+                              '<button onclick="likeFunction('+data[i].Vacancy_id+')"class="like">Like</button>\n' +
+
+                         ' </div>\n' +
+
+                         
+                        '</div>\n' +
+                      '</div>\n' +
+                  '</div> \n' ;
+   
+
+}
+section.appendChild(div);
+
+
+}
+ function likeFunction(vacancy_id) {
+   console.log(vacancy_id);
+  $.ajax({		
+
+// insert the URL of the page that returns the data			 
+		url: location.protocol + '//' + location.host + '/wall/'+vacancy_id,
+		// enter any parameters
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+console.log("done ajax vacancy_id")
+	}).fail(function(jqXHR, textStatus, errorThrown){
+
+		alert("error ajax vacancy_id");
+	});
+ }
+
+
+load_jobPosts();
+$(function(){	
+	// refresh page date in milliseconds
+	setInterval(load_jobPosts,300000); // refresh every 5 min
+});
+
+</script>
+</body>
+</html>

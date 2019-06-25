@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Title Page-->
+    <title>Reveal</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+
+    <!-- Icons font CSS-->
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+
+
+    <!-- Main CSS-->
+    <!--<link href="css/style.css" rel="stylesheet" media="all">-->
+    <link href="css/main.css" rel="stylesheet" media="all">
+
+
+<!-- CDN links -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="css/amsify.suggestags.css">
+
+<!-- Amsify Plugin -->
+<script type="text/javascript" src="js/jquery.amsify.suggestags.js"></script>
+
+</head>
+
+<body>
+    <iframe src="header.html" width="100%"  height = "15%"  frameborder = "no"></iframe>
+    <div class="page-wrapper bg-blue p-t-100 p-b-100 font-robo">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-1">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">Chart Info</h2>
+
+                    <div class="input-group">
+                            <div class="rs-select2 js-select-simple select--no-search">
+                                    <select id="city_select",name="city_select">
+                                    <option disabled="disabled" selected="selected">CITY</option>
+                                </select>
+                                <div class="select-dropdown"></div>
+                            </div>
+                        </div>
+                           <div class="input-group">
+                                <div class="rs-select2 js-select-simple select--no-search">
+                                  <select onchange ="load_jobTitle()", id="job_category_select",name="job_category_select">
+                                    <option disabled="disabled" selected="selected">JOB CATEGORY</option>
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                            </div>
+             
+                            <div class="input-group">
+                                    <div class="rs-select2 js-select-simple select--no-search">
+                                            <select onchange ="load_careerLevel()" id="job_title_select",name="job_title_select">
+                                            <option disabled="disabled" selected="selected">JOB TITLE</option>
+                                        </select>
+                                        <div class="select-dropdown"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                        <div class="rs-select2 js-select-simple select--no-search">
+                                                <select id="career_level_select",name="career_level_select">
+                                                <option disabled="disabled" selected="selected">CAREER LEVEL</option>
+                                            </select>
+                                            <div class="select-dropdown"></div>
+                                        </div>
+                                    </div>
+                       
+
+                        <div class="p-t-20">
+                            <button class="btn btn--radius btn--blue" onclick="javascript:chart()">Draw Chart</button>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+
+<script type="text/javascript">
+
+
+    function load_jobCategory(){
+      console.log("load_jobCategory")
+     
+        $.ajax({		
+    
+    // insert the URL of the page that returns the data			 
+            url: location.protocol + '//' + location.host + '/home',
+            // enter any parameters
+            data:{},
+    
+            dataType:"json",
+            context: document.body
+        }).done(function(data) {
+            //alert(JSON.stringify(data));
+            set_jobCategory(data);
+        }).fail(function(jqXHR, textStatus, errorThrown){});
+    
+    //setData(data);
+    } // end loadData()
+    
+    $
+    
+    // ------------------------------------
+    function set_jobCategory(data){
+        
+    // enter the names of the table columns with the data
+        var job_category = "job_category";
+        var job_categories=[];
+                
+        var _val;	
+    
+    
+    // cycle all the data received and I take all the different dates
+        for (_val in data){
+             
+                job_categories.push(data[_val][job_category]); 
+                    
+        }
+        
+        var select = document.getElementById("job_category_select");
+        // $("#job_category_select").empty();
+
+        for(i in job_categories) {
+        var option = document.createElement('option');
+        option.text = option.value = job_categories[i];
+        select.add(option, 0);
+    }
+    
+    
+    }
+    
+    
+    function load_jobTitle(){
+        
+        console.log("load jobTitle")
+        var job_category = document.getElementById("job_category_select").value;
+        //alert(username);
+        //alert(location.protocol + '//' + location.host + '/home/'+username);
+        $.ajax({		
+    
+    // insert the URL of the page that returns the data			 
+            url: location.protocol + '//' + location.host + '/home/'+job_category,
+            // enter any parameters
+            data:{},
+    
+            dataType:"json",
+            context: document.body
+        }).done(function(data) {
+            //alert(location.protocol + '//' + location.host + '/home/'+username);
+            set_jobTitle(data);
+        }).fail(function(jqXHR, textStatus, errorThrown){
+    
+            alert("error");
+        });
+    
+    //setData(data);
+    }
+    
+    function set_jobTitle(data){
+        
+    // enter the names of the table columns with the data
+        var job_title = "Job_name";
+        var job_titles=[];
+                
+        var _val;	
+    
+    
+    // cycle all the data received and I take all the different dates
+        for (_val in data){
+             
+                job_titles.push(data[_val][job_title]); 
+                    
+        }
+        
+        var select = document.getElementById("job_title_select");
+        $("#job_title_select").empty();
+        for(i in job_titles) {
+        var option = document.createElement('option');
+        option.text = option.value = job_titles[i];
+        select.add(option, 0);
+    }
+    
+    
+    }
+    
+    function load_city(){
+      console.log("load_city")
+     
+        $.ajax({		
+    
+    // insert the URL of the page that returns the data			 
+            url: location.protocol + '//' + location.host + '/city',
+            // enter any parameters
+            data:{},
+    
+            dataType:"json",
+            context: document.body
+        }).done(function(data) {
+            //alert(JSON.stringify(data));
+            set_city(data);
+        }).fail(function(jqXHR, textStatus, errorThrown){});
+    
+   
+    } 
+    
+    function set_city(data){
+        
+    // enter the names of the table columns with the data
+        var city = "City";
+        var cities=[];
+                
+        var _val;	
+    
+    
+    // cycle all the data received and I take all the different dates
+        for (_val in data){
+             
+                cities.push(data[_val][city]); 
+                    
+        }
+        
+        var select = document.getElementById("city_select");
+        // $("#city_select").empty();
+
+        for(i in cities) {
+        var option = document.createElement('option');
+        option.text = option.value = cities[i];
+        select.add(option, 0);
+    }
+    
+    }
+    
+
+    function load_careerLevel(){
+        
+        console.log("load careerLevel")
+        var job_title = document.getElementById("job_title_select").value;
+        //alert(username);
+        //alert(location.protocol + '//' + location.host + '/home/'+username);
+        $.ajax({		
+    
+    // insert the URL of the page that returns the data			 
+            url: location.protocol + '//' + location.host + '/salary_recommendation/'+job_title,
+            // enter any parameters
+            data:{},
+    
+            dataType:"json",
+            context: document.body
+        }).done(function(data) {
+            //alert(location.protocol + '//' + location.host + '/home/'+username);
+            set_careerLevel(data);
+        }).fail(function(jqXHR, textStatus, errorThrown){
+    
+            alert("error");
+        });
+    
+    }
+    
+    function set_careerLevel(data){
+        
+    // enter the names of the table columns with the data
+        var career_level = "career_level";
+        var career_levels=[];
+                
+        var _val;	
+    
+    console.log("career level data");
+    console.log(data);
+
+    // cycle all the data received and I take all the different dates
+        for (_val in data){
+             
+            career_levels.push(data[_val][career_level]); 
+                    
+        }
+        
+        var select = document.getElementById("career_level_select");
+        // $("#career_level_select").empty();
+        for(i in career_levels) {
+        var option = document.createElement('option');
+        option.text = option.value = career_levels[i];
+        select.add(option, 0);
+    }
+    
+    
+    }
+    
+
+    function chart() {
+    
+        var jobtitle = document.getElementById("job_title_select").value;
+        var city = document.getElementById("city_select").value;
+        var career_level = document.getElementById("career_level_select").value;
+
+        window.localStorage.setItem('jobtitle',jobtitle );
+        window.localStorage.setItem('city', city);
+        window.localStorage.setItem('career_level', career_level);
+
+      var data = {};
+                        data.jobtitle = jobtitle;
+        $.ajax({		
+          
+
+    // insert the URL of the page that returns the data	
+       		 
+        url: location.protocol + '//' + location.host + '/salary_recommendation',
+        type: "POST",
+            // enter any parameters
+        data: JSON.stringify(data),
+    
+            dataType:"json",
+        context: document.body,
+        success: function(data) {
+        console.log('success');
+        console.log(JSON.stringify(data));
+        //alert(location.protocol + '//' + location.host + '/home/'+jobtitle);
+    
+                            }
+        
+        });
+    
+    
+    
+        window.location = "chart3.html";
+     }
+     load_city();
+     load_jobCategory();
+    $(function(){	
+        // refresh page date in milliseconds
+        setInterval(function(){
+            load_city();
+            load_jobCategory();
+        },5000);
+    });
+    
+    </script>
+    
+
+</html>
+<!-- end document-->

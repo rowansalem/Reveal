@@ -1,0 +1,165 @@
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/highcharts/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript">
+
+var _startSerie=[];
+var _startCategories=[];
+var chart;
+
+function loadData(){
+
+var jobtitlevalue;
+	console.log("load data")
+	$.ajax({		
+
+		url: location.protocol + '//' + location.host + '/jobtitle',
+
+
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		jobtitlevalue = data.job_title;
+
+		$.ajax({		
+
+		url: location.protocol + '//' + location.host + '/jobtitle2/'+jobtitlevalue,
+
+
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		//alert(data);
+		setData(data,jobtitlevalue);
+	}).fail(function(jqXHR, textStatus, errorThrown){});
+
+	}).fail(function(jqXHR, textStatus, errorThrown){});
+
+
+
+} // end loadData()
+
+$
+
+// ------------------------------------
+function setData(data,jobtitlevalue){
+	
+ 	var description = "career_level";
+	var timestamp = "job_year";
+	var value = "salary";
+			
+	var _val;	
+	var impianti=[];
+	var categories=[];
+	var impiantiObj=[];
+		
+	for (_val in data){
+			
+		if(impianti.indexOf(data[_val][description])==-1){ 
+			impianti.push(data[_val][description]); 
+			impiantiObj.push({name:data[_val][description],data:[]});
+		}
+		
+		if(categories.indexOf(data[_val][timestamp])==-1) {
+			categories.push(data[_val][timestamp]);
+		}	
+	}
+			
+	function formatLabel() {
+		var _arr = [];
+		for(var i=0; i<categories.length; i++) { 
+			_arr.push(categories[i]);
+		}
+			
+		return _arr;
+	}
+		
+		
+	_startCategories=formatLabel();
+		
+	console.log(_startCategories)
+		
+	
+	for (var i=0; i<impianti.length; i++) {
+		for (_val in data){
+			if(data[_val][description]==impianti[i]){ 
+				impiantiObj[i].data.push(data[_val][value])
+			}
+		}
+	}
+		
+	if(chart==undefined){
+		
+		for (var i=0; i<impianti.length; i++) {
+			_startSerie.push( {name:impianti[i], data:impiantiObj[i].data} );
+		}
+			
+		setupChart(jobtitlevalue);
+		
+	} else {
+// in subsequent calls, I update the chart
+		chart = $('#container').highcharts();
+		chart.xAxis[0].setCategories(_startCategories);
+		for (var i=0; i<impianti.length; i++) {
+			chart.series[i].setData(impiantiObj[i].data);
+		}
+	}	
+}
+
+
+function setupChart(jobtitlevalue){	
+	
+    chart = $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Job Entry Levels vs salaries for '+jobtitlevalue
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: _startCategories,
+            crosshair: true,
+             title: {
+                text: 'Year'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Salaries'
+            }
+        },
+        tooltip: {
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: _startSerie
+    });
+}
+
+
+$(function(){	
+	// refresh page date in milliseconds
+	setInterval(loadData,5000);
+});
+
+
+// -------------------------------------	
+
+</script>

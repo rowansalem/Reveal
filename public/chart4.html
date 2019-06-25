@@ -1,0 +1,170 @@
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="https://code.highcharts.com/7/highcharts.js"></script>
+<script src="https://code.highcharts.com/7/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/7/highcharts-more.js"></script>
+<div id="container" style=" height: 700px; " ></div>
+
+<script type="text/javascript">
+
+var _startSerie=[];
+var chart;
+
+function loadData(){
+	console.log("load data")
+	$.ajax({
+
+// insert the URL of the page that returns the data
+		url: location.protocol + '//' + location.host + '/jobtitle',
+
+
+// enter any parameters
+		data:{},
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		jobtitlevalue = data.job_title;
+		// alert(jobtitlevalue);
+	$.ajax({
+
+// insert the URL of the page that returns the data
+		url: location.protocol + '//' + location.host + '/jobtitle3/'+jobtitlevalue,
+
+// enter any parameters
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		setData(data,jobtitlevalue);
+	}).fail(function(jqXHR, textStatus, errorThrown){});
+}).fail(function(jqXHR, textStatus, errorThrown){});
+
+} // end loadData()
+
+$
+
+// ------------------------------------
+function setData(data,jobtitlevalue){
+
+// enter the names of the table columns with the data
+	var Skill_name = "Skill_name";
+	var value = "Freq";
+	var total=0;
+	var Skills=[];
+	var values=[];
+
+	var _val;
+	var impianti=[];
+	var categories=[];
+	var impiantiObj=[];
+
+
+		for (_val in data){
+	total = total + parseInt(data[_val][value], 10);
+		}
+// cycle all the data received and I take the different plants + all the different dates
+	for (_val in data){
+
+		if(Skills.indexOf(data[_val][Skill_name])==-1&&((data[_val][value]/total)*100)>0.2){
+
+			Skills.push(data[_val][Skill_name]);
+			//values.push({name:data[_val][Skill_name],y:10});
+			//values.push({name:data[_val][Skill_name],y:Number((parseInt(data[_val][value], 10)/total)*100).toFixed(2)});
+
+			values.push(data[_val][value]);
+			//console.log(data[_val][Skill_name]+"	:	"+data[_val][value]);
+		}
+
+
+	}
+
+
+
+// cycle the plants and recover all the temperatures
+
+
+
+		//setupChart();
+// if it is the first call, I create an obj for the chart and call the setup
+
+	if(chart==undefined){
+    	for (var i=0; i<Skills.length; i++) {
+			_startSerie.push( {name:Skills[i], value:values[i]});
+		}
+		console.log('_startSerie');
+
+		console.log(_startSerie);
+		Series=[];
+		job_title='Job_name';
+		Series.push({name: data[0][job_title],data: _startSerie});
+		console.log('Series');
+		console.log(Series);
+
+		setupChart(jobtitlevalue);
+
+	} else {
+// in subsequent calls, I update the chart
+		//chart = $('#container').highcharts();
+		//for (var i=0; i<Skills.length; i++) {
+		//	chart.series[i].setData(values[i]);
+	//	setupChart();
+	//	}
+	}
+
+}
+
+
+
+
+
+function setupChart(jobtitlevalue){
+
+chart =$('#container').highcharts({
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'packedbubble'
+  },
+  title: {
+    text: jobtitlevalue +' skills '
+  },tooltip: {
+    useHTML: true,
+    pointFormat: '<b>{point.name}:</b> {point.value}m CO<sub>2</sub>'
+  },
+  plotOptions: {
+    packedbubble: {
+      minSize: '30%',
+      maxSize: '400%',
+ 
+      layoutAlgorithm: {
+    //     splitSeries: false,
+        gravitationalConstant: 0.002
+      },
+      dataLabels: {
+        enabled: true,
+        format: '{point.name}',
+        filter: {
+          property: 'y',
+          operator: '>',
+          value: 9
+        },
+        style: {
+          color: 'black',
+          textOutline: 'none',
+          fontWeight: 'normal'
+        }
+      }
+    }
+  },
+
+	series: Series
+});
+}
+loadData();
+$(function(){
+	// refresh page date in milliseconds
+	setInterval(loadData,5000);
+});
+
+</script>

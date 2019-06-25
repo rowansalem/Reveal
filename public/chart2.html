@@ -1,0 +1,157 @@
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/highcharts/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+<script type="text/javascript">
+
+var _startSerie=[];
+var _startCategories=[];
+var chart;
+
+function loadData(){
+	console.log("load data")
+	$.ajax({		
+
+// insert the URL of the page that returns the data			 
+		url: location.protocol + '//' + location.host + '/jobtitle',
+
+
+// enter any parameters
+		data:{},
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		jobtitlevalue = data.job_title;
+		// alert(jobtitlevalue);
+	$.ajax({		
+
+// insert the URL of the page that returns the data			 
+		url: location.protocol + '//' + location.host + '/jobtitle/'+jobtitlevalue,
+
+// enter any parameters
+		data:{},
+
+		dataType:"json",
+		context: document.body
+	}).done(function(data) {
+		setData(data,jobtitlevalue);
+	}).fail(function(jqXHR, textStatus, errorThrown){});
+}).fail(function(jqXHR, textStatus, errorThrown){});
+
+} // end loadData()
+
+$
+
+// ------------------------------------
+function setData(data,jobtitlevalue){
+	
+// enter the names of the table columns with the data
+	var city = "city";
+	var value = "sum(num_vacancies)";
+	var total=0;
+	var cities=[];
+	var values=[];
+			
+	var _val;	
+	var impianti=[];
+	var categories=[];
+	var impiantiObj=[];
+		
+
+		for (_val in data){
+	total = total + parseInt(data[_val][value], 10);
+		}
+// cycle all the data received and I take the different plants + all the different dates
+	for (_val in data){
+			
+		if(cities.indexOf(data[_val][city])==-1&&((data[_val][value]/total)*100)>1){ 
+
+			cities.push(data[_val][city]); 
+			//values.push({name:data[_val][city],y:10});
+			//values.push({name:data[_val][city],y:Number((parseInt(data[_val][value], 10)/total)*100).toFixed(2)});
+
+			values.push({name:data[_val][city],y:data[_val][value]});
+			//console.log(data[_val][city]+"	:	"+data[_val][value]);
+		}
+		
+		
+	}
+			
+	
+						
+// cycle the plants and recover all the temperatures
+	
+
+
+		//setupChart();
+// if it is the first call, I create an obj for the chart and call the setup
+
+var x=["m","n","l"];
+var l=[40,50,10]
+
+	if(chart==undefined){
+		
+	//	for (var i=0; i<cities.length; i++) {
+			_startSerie.push( {name:"cities[i]", data:values});
+		//}
+			
+		setupChart(jobtitlevalue);
+		
+	} else {
+// in subsequent calls, I update the chart
+		//chart = $('#container').highcharts();
+		//for (var i=0; i<cities.length; i++) {
+		//	chart.series[i].setData(values[i]);
+	//	setupChart();
+	//	}
+	}	
+	
+}
+
+
+
+
+
+function setupChart(jobtitlevalue){	
+
+chart =$('#container').highcharts({
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie'
+  },
+  title: {
+    text: jobtitlevalue +' geographic distribution'
+  },
+  tooltip: {
+  //  pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+   // shared: true,
+    //useHTML: true
+  },
+  plotOptions: {
+    pie: {
+      allowPointSelect: true,
+      cursor: 'pointer',
+      dataLabels: {
+        enabled: true,
+        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        //style: {
+          //color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+        //}
+      }
+    }
+  },
+  series: _startSerie
+});
+}
+
+
+$(function(){	
+	// refresh page date in milliseconds
+	setInterval(loadData,5000);
+});
+
+</script>
