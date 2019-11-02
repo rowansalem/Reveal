@@ -23,7 +23,7 @@
     "cryptr": "^4.0.2",
     "css-vendor": "^2.0.1",
     "csv-headers": "^1.0.0",
-    "csv-parse": "^4.4.1",
+    "csv-parse": "^4.4.6",
     "csv-parser": "^2.3.0",
     "debug": "^4.1.1",
     "ejs": "^2.6.1",
