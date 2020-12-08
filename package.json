@@ -34,7 +34,7 @@
     "express-handlebars": "^3.0.2",
     "express-session": "^1.16.1",
     "express-validator": "^5.3.1",
-    "fast-csv": "^2.5.0",
+    "fast-csv": "^4.3.6",
     "fs": "0.0.1-security",
     "get-paths": "0.0.4",
     "grunt-contrib-clean": "^2.0.0",
