@@ -67,7 +67,7 @@
     "path": "^0.12.7",
     "preview-email": "0.0.10",
     "pstree.remy": "^1.1.6",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "python-shell": "^1.0.7",
     "q": "^1.5.1",
     "request-promise": "^4.2.4",
