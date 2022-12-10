@@ -29,7 +29,7 @@
     "ejs": "^2.6.1",
     "email-templates": "^2.7.1",
     "encoding": "^0.1.12",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-generator": "^4.16.0",
     "express-handlebars": "^3.0.2",
     "express-session": "^1.16.1",
